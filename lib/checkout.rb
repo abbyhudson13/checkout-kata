@@ -38,6 +38,16 @@ class Checkout
   private
 
   def basket
-    @basket ||= Array.new
+    @basket ||= Hash.new
   end
+end
+
+class Discount
+  DISCOUNTS = {
+    "apple": { "minimum_quantity": 2, "discount_quantity": 1, "maximum_quantity": nil},
+    "pear": { "minimum_quantity": 2, "discount_quantity": 1, "maximum_quantity": nil},
+    "banana": { "minimum_quantity": 1, "discount_quantity": 0.5, "maximum_quantity": nil},
+    "pineapple": { "minimum_quantity": 1, "discount_quantity": 0.5, "maximum_quantity": 1},
+    "mango": { "minimum_quantity": 4, "discount_quantity": 3, "maximum_quantity": nil}
+  }
 end
