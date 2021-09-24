@@ -16,7 +16,7 @@ class Checkout
 
   def total
     total = 0
-    basket { |items, item| items[item] += 1; items }.each do |item, count|
+    basket.each do |item, count|
       p basket
       if item == :apple || item == :pear
         if (count % 2 == 0)
