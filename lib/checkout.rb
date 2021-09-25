@@ -13,8 +13,8 @@ class Checkout
   def total
     total = 0
     basket.each do |item, count|
-      if count % multibuy_quantity(item) == 0 && Discount::DISCOUNTS[item.to_sym][:restricted] == true
-        number_of_discounted_items = count - Discount::DISCOUNTS[item.to_sym][:restriction_quantity]
+      if count % multibuy_quantity(item) == 0 && item_restriction_exists?(item)
+        number_of_discounted_items = count - restriction_quantity(item)
         number_of_full_priced_items = count - number_of_discounted_items
         total += prices.fetch(item) * discount_value(item) * number_of_discounted_items
         total += prices.fetch(item) * number_of_full_priced_items
@@ -42,6 +42,14 @@ class Checkout
 
   def discount_value(item)
     Discount::DISCOUNTS[item.to_sym][:discount_value]
+  end
+
+  def item_restriction_exists?(item)
+    Discount::DISCOUNTS[item.to_sym][:restricted] == true
+  end
+
+  def restriction_quantity(item)
+    Discount::DISCOUNTS[item.to_sym][:restriction_quantity]
   end
 end
 
