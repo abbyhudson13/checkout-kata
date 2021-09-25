@@ -7,11 +7,7 @@ class Checkout
   end
 
   def scan(item)
-    if basket[item].nil?
-      basket[item] = 1
-    else
-      basket[item] += 1
-    end
+    basket[item].nil? ? basket[item] = 1 : basket[item] += 1
   end
 
   def total
