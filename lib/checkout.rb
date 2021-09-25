@@ -31,28 +31,24 @@ class Checkout
 
   private
 
-  def item
-    @item
-  end
-
   def basket
     @basket ||= Hash.new
   end
 
   def multibuy_quantity
-    Discount::DISCOUNTS[item.to_sym][:multibuy_quantity]
+    Discount::DISCOUNTS[@item.to_sym][:multibuy_quantity]
   end
 
   def discount_value
-    Discount::DISCOUNTS[item.to_sym][:discount_value]
+    Discount::DISCOUNTS[@item.to_sym][:discount_value]
   end
 
   def item_restriction_exists?
-    Discount::DISCOUNTS[item.to_sym][:restricted] == true
+    Discount::DISCOUNTS[@item.to_sym][:restricted] == true
   end
 
   def restriction_quantity
-    Discount::DISCOUNTS[item.to_sym][:restriction_quantity]
+    Discount::DISCOUNTS[@item.to_sym][:restriction_quantity]
   end
 end
 
