@@ -13,18 +13,20 @@ class Checkout
   def total
     total = 0
     basket.each do |item, count|
-      if count % multibuy_quantity(item) == 0 && item_restriction_exists?(item)
-        number_of_discounted_items = count - restriction_quantity(item)
+      @item = item
+      price = prices.fetch(item)
+      if count % multibuy_quantity == 0 && item_restriction_exists?
+        number_of_discounted_items = count - restriction_quantity
         number_of_full_priced_items = count - number_of_discounted_items
-        total += prices.fetch(item) * discount_value(item) * number_of_discounted_items
-        total += prices.fetch(item) * number_of_full_priced_items
-      elsif count % multibuy_quantity(item) == 0
-        split_count = count.divmod(multibuy_quantity(item))
+        total += price * discount_value * number_of_discounted_items
+        total += price * number_of_full_priced_items
+      elsif count % multibuy_quantity == 0
+        split_count = count.divmod(multibuy_quantity)
         discounted_quantity = split_count[0]
-        total += prices.fetch(item) * discount_value(item) * discounted_quantity
-        total += prices.fetch(item) * split_count[1]
+        total += price * discount_value * discounted_quantity
+        total += price * split_count[1]
       else
-        total += prices.fetch(item) * count
+        total += price * count
       end
     end
     total
@@ -32,23 +34,27 @@ class Checkout
 
   private
 
+  def item
+    @item
+  end
+
   def basket
     @basket ||= Hash.new
   end
 
-  def multibuy_quantity(item)
+  def multibuy_quantity
     Discount::DISCOUNTS[item.to_sym][:multibuy_quantity]
   end
 
-  def discount_value(item)
+  def discount_value
     Discount::DISCOUNTS[item.to_sym][:discount_value]
   end
 
-  def item_restriction_exists?(item)
+  def item_restriction_exists?
     Discount::DISCOUNTS[item.to_sym][:restricted] == true
   end
 
-  def restriction_quantity(item)
+  def restriction_quantity
     Discount::DISCOUNTS[item.to_sym][:restriction_quantity]
   end
 end
