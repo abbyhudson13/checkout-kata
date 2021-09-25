@@ -15,18 +15,16 @@ class Checkout
     basket.each do |item, count|
       @item = item
       price = prices.fetch(item)
-      if count % multibuy_quantity == 0 && item_restriction_exists?
+      if item_restriction_exists?
         number_of_discounted_items = count - restriction_quantity
-        number_of_full_priced_items = count - number_of_discounted_items
         total += price * discount_value * number_of_discounted_items
+        number_of_full_priced_items = count - number_of_discounted_items
         total += price * number_of_full_priced_items
-      elsif count % multibuy_quantity == 0
+      else
         split_count = count.divmod(multibuy_quantity)
         discounted_quantity = split_count[0]
         total += price * discount_value * discounted_quantity
         total += price * split_count[1]
-      else
-        total += price * count
       end
     end
     total
