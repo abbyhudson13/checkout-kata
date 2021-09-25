@@ -17,14 +17,14 @@ class Checkout
       price = prices.fetch(item)
       if item_restriction_exists?
         number_of_discounted_items = count - restriction_quantity
-        number_of_full_priced_items = count - number_of_discounted_items
+        number_of_full_price_items = count - number_of_discounted_items
       else
-        split_count = count.divmod(multibuy_quantity)
-        number_of_discounted_items = split_count[0]
-        number_of_full_priced_items = split_count[1]
+        discounted_and_full_price_items = count.divmod(multibuy_quantity)
+        number_of_discounted_items = discounted_and_full_price_items.first
+        number_of_full_price_items = discounted_and_full_price_items.last
       end
       total += price * number_of_discounted_items * discount_value
-      total += price * number_of_full_priced_items
+      total += price * number_of_full_price_items
     end
     total
   end
