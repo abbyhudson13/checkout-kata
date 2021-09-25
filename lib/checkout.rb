@@ -18,12 +18,11 @@ class Checkout
     total = 0
     basket.each do |item, count|
       p basket
-      p count
-      if count % Discount::DISCOUNTS[item.to_sym][:minimum_quantity] == 0
-        split_count = count.divmod(Discount::DISCOUNTS[item.to_sym][:minimum_quantity])
+      if count % multibuy_quantity(item) == 0
+        split_count = count.divmod(multibuy_quantity(item))
         p split_count
         discounted_quantity = split_count[0]
-        total += prices.fetch(item) * Discount::DISCOUNTS[item.to_sym][:discount_quantity] * discounted_quantity
+        total += prices.fetch(item) * discount_value(item) * discounted_quantity
         total += prices.fetch(item) * split_count[1]
       else
         total += prices.fetch(item) * count
@@ -57,15 +56,23 @@ class Checkout
   def basket
     @basket ||= Hash.new
   end
+
+  def multibuy_quantity(item)
+    Discount::DISCOUNTS[item.to_sym][:multibuy_quantity]
+  end
+
+  def discount_value(item)
+    Discount::DISCOUNTS[item.to_sym][:discount_value]
+  end
 end
 
 class Discount
   DISCOUNTS = {
-    "apple": { "minimum_quantity": 2, "discount_quantity": 1, "maximum_quantity": 100},
-    "orange": { "minimum_quantity": 1, "discount_quantity": 1, "maximum_quantity": 100},
-    "pear": { "minimum_quantity": 2, "discount_quantity": 1, "maximum_quantity": 100},
-    "banana": { "minimum_quantity": 1, "discount_quantity": 0.5, "maximum_quantity": 100},
-    "pineapple": { "minimum_quantity": 1, "discount_quantity": 0.5, "maximum_quantity": 1},
-    "mango": { "minimum_quantity": 4, "discount_quantity": 3, "maximum_quantity": 100}
+    "apple": { "multibuy_quantity": 2, "discount_value": 1},
+    "orange": { "multibuy_quantity": 1, "discount_value": 1},
+    "pear": { "multibuy_quantity": 2, "discount_value": 1},
+    "banana": { "multibuy_quantity": 1, "discount_value": 0.5},
+    "pineapple": { "multibuy_quantity": 1, "discount_value": 0.5, "maximum_quantity": 1},
+    "mango": { "multibuy_quantity": 4, "discount_value": 3}
   }
 end
