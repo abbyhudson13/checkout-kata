@@ -22,9 +22,10 @@ class Checkout
         total += price * number_of_full_priced_items
       else
         split_count = count.divmod(multibuy_quantity)
-        discounted_quantity = split_count[0]
-        total += price * discount_value * discounted_quantity
-        total += price * split_count[1]
+        number_of_discounted_items = split_count[0]
+        number_of_full_priced_items = split_count[1]
+        total += price * discount_value * number_of_discounted_items
+        total += price * number_of_full_priced_items
       end
     end
     total
